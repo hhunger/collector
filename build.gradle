@@ -1,0 +1,51 @@
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath "com.github.jengelman.gradle.plugins:shadow:2.0.1"
+    }
+}
+
+apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'java'
+
+group 'hhu.collector'
+version '2.0.0'
+
+sourceCompatibility = '1.8'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.influxdb:influxdb-java:2.7'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'hhu.collector.Collector'
+    }
+}
+
+task buildDocker(type: Exec, dependsOn: "shadowJar") {
+    description 'Compile sources and build Docker image using Dockerfile'
+    group 'build'
+
+    doFirst {
+        if (!dockerHost) throw new GradleException("Please set property 'dockerHost' to your desired DOCKER_HOST value.")
+        logger.lifecycle("Building on DOCKER_HOST: " + dockerHost)
+    }
+
+    commandLine 'docker',
+            'build',
+            '--build-arg', "COLLECTOR_VERSION=${project.version}",
+            '--tag', "${project.group.replace('.','/')}:${project.version}",
+            '--tag', "${project.group.replace('.','/')}:latest",
+            '.'
+    environment DOCKER_HOST: dockerHost
+}
