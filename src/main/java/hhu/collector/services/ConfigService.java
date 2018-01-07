@@ -69,6 +69,8 @@ public class ConfigService {
         return oneWireSensorDefs;
     }
 
+    public String getOneWireBaseDev() { return ONE_WIRE_BASE_DEV; }
+
     public long getPollIntervalSecs() {
         return pollIntervalSecs;
     }
@@ -89,10 +91,10 @@ public class ConfigService {
             Matcher m = OW_DEF_PATTERN.matcher(owDefs);
 
             if (m.matches()) {
-                String dev = String.format(ONE_WIRE_BASE_DEV, m.group(2));
-                System.out.format("Found OneWire config for '%s': %s\n", m.group(1), dev);
-
-                oneWireSensorDefs.put(m.group(1), dev);
+                String sensorName = m.group(1);
+                String sensorId = m.group(2);
+                System.out.format("Found OneWire config for '%s': %s\n", sensorName, sensorId);
+                oneWireSensorDefs.put(sensorName, sensorId);
             } else {
                 System.err.format("Invalid OneWire config: %s=%s\n", defString, owDefs);
             }

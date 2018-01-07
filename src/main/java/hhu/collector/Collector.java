@@ -40,9 +40,9 @@ public class Collector {
     }
 
     private void createOneWireService() {
-        oneWireService = new OneWireService();
+        oneWireService = new OneWireService(conf.getOneWireBaseDev());
         for (Map.Entry<String, String> sensorDef : conf.getOneWireSensorDefs().entrySet()) {
-            Sensor sensor = new Sensor(sensorDef.getKey(), Paths.get(sensorDef.getValue()));
+            Sensor sensor = new Sensor(sensorDef.getKey(), sensorDef.getValue());
             oneWireService.addSensor(sensor);
         }
     }

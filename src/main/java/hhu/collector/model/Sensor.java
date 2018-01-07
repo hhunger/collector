@@ -1,26 +1,24 @@
 package hhu.collector.model;
 
-import java.nio.file.Path;
-
 public class Sensor {
     private String name;
-    private Path devicePath;
+    private String id;
 
-    public Sensor(String name, Path devicePath) {
+    public Sensor(String name, String id) {
         this.name = name;
-        this.devicePath = devicePath;
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public Path getDevicePath() {
-        return devicePath;
+    public String getId() {
+        return id;
     }
 
     @Override
     public String toString() {
-        return String.format("Sensor '%s', '%s'", name, devicePath);
+        return String.format("Sensor '%s', '%s'", name, id);
     }
 }
